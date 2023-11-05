@@ -1,11 +1,11 @@
 # imap-postgresql-ubuntu2204
-## Install an IMAP email server on Ubuntu 22.04 using Postfix, Dovecot, and PostgreSQL using Certbot
+## Install an IMAP email server on Ubuntu 22.04 using Postfix, Dovecot, and PostgreSQL using Certbot and fail2ban
 
 These instructions were adopted from [Configure an Email Server with Postfix, Dovecot, and MySQL on Debian and Ubuntu](https://www.linode.com/docs/guides/email-with-postfix-dovecot-and-mysql/)
 
 ### Step 1: Install PostgreSQL, Postfix with PGSQL support, and Dovecot w/IMAP and LMTPD support
 
-`sudo apt-get install postgresql postgresql-contrib postfix postfix-pgsql dovecot-core dovecot-imapd dovecot-lmtpd dovecot-pgsql`
+`sudo apt-get install postgresql postgresql-contrib postfix postfix-pgsql dovecot-core dovecot-imapd dovecot-lmtpd dovecot-pgsql fail2ban`
 
 `sudo snap install --classic certbot`
 
@@ -95,3 +95,21 @@ driver = pgsql
 ```
 [Dovecot](https://www.linode.com/docs/guides/email-with-postfix-dovecot-and-mysql/#dovecot)
 
+```
+File: /etc/dovecot/conf.d/10-logging.conf
+log_path = /var/log/dovecot.log
+info_log_path = /var/log/dovecot-info.log
+debug_log_path = /var/log/dovecot-debug.log
+auth_verbose = yes
+auth_verbose_passwords = sha1
+```
+
+### Step 10: Configure fail2ban
+```
+File: /etc/fail2ban/jail.local
+[dovecot]
+enabled = true
+port    = imap,imaps,submission,465,sieve
+logpath = /var/log/dovecot-info.log
+backend = %(dovecot_backend)s
+```
