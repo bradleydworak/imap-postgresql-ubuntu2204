@@ -112,4 +112,23 @@ enabled = true
 port    = imap,imaps,submission,465,sieve
 logpath = /var/log/dovecot-info.log
 backend = %(dovecot_backend)s
+[DEFAULT]
+bantime = 600
+bantime.increment = true
+bantime.factor = 1
+maxretry = 3
+```
+
+```
+File: /etc/fail2ban/filter.d/dovecot.conf
+prefregex = ^%(__prefix_line)s(?:%(_auth_worker)s(?:\([^\)]+\))?: )?(?:%(__pam_auth)s(?:\(dovecot:auth\))?: |(?:pop3|imap)-login: )?(?:Info: )?<F-CONTENT>.+</F-CONTENT>$
+
+failregex = ^authentication failure; logname=<F-ALT_USER1>\S*</F-ALT_USER1> uid=\S* euid=\S* tty=dovecot ruser=<F-USER>\S*</F-USER> rhost=<HOST>(?:\s+user=<F-ALT_USER>\S*</F-ALT_USER>)?\s*$
+            ^(?:Aborted login|Disconnected)(?::(?: [^ \(]+)+)? \((?:auth failed, \d+ attempts(?: in \d+ secs)?|tried to use (?:disabled|disallowed) \S+ auth|proxy dest auth failed)\):(?: user=<<F-USER>[^>]*</F-USER>>,)?(?: method=\S+,)? rip=<HOST>(?:[^>]*(?:, session=<\S+>)?)\s*$
+            ^pam\(\S+,<HOST>(?:,\S*)?\): pam_authenticate\(\) failed: (?:User not known to the underlying authentication module: \d+ Time\(s\)|Authentication failure \(password mismatch\?\)|Permission denied)\s*$
+            ^[a-z\-]{3,15}\(\S*,<HOST>(?:,\S*)?\): (?:unknown user|invalid credentials|Password mismatch)\s*\(SHA1 of given password:\s*\w*\)$
+            <mdre-<mode>>
+
+mdre-aggressive = ^(?:Aborted login|Disconnected)(?::(?: [^ \(]+)+)? \((?:no auth attempts|disconnected before auth was ready,|client didn't finish \S+ auth,)(?: (?:in|waited) \d+ secs)?\):(?: user=<[^>]*>,)?(?: method=\S+,)? rip=<HOST>(?:[^>]*(?:, session=<\S+>)?)\s*$
+mode = normal
 ```
