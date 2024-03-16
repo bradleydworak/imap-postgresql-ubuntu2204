@@ -65,10 +65,18 @@ verify
 https://www.linode.com/docs/guides/email-with-postfix-dovecot-and-mysql/#postfix
 
 ```
-# Virtual domains, users, and aliases
+# Virtual domains, users, aliases, mailbox size limit, and email message size limit in /etc/postfix/main.cf file
+
+# Set Virtual Mailbox limit of 10GB for example
+virtual_mailbox_limit = 10000000000
+mailbox_size_limit = 10000000000
+
 virtual_mailbox_domains = pgsql:/etc/postfix/pgsql-virtual-mailbox-domains.cf
 virtual_mailbox_maps = pgsql:/etc/postfix/pgsql-virtual-mailbox-maps.cf
 virtual_alias_maps = pgsql:/etc/postfix/pgsql-virtual-alias-maps.cf, pgsql:/etc/postfix/pgsql-virtual-email2email.cf
+
+# Set email message size limit of 25MB for example
+message_size_limit = 25000000
 ```
 
 ### Step 7: Test Postfix
