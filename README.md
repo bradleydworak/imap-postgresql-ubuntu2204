@@ -46,7 +46,7 @@ verify
 
 `SELECT * FROM virtual_domains;`
 
-### Step 4: Insert user passwords
+### Step 4: Add email addresses and passwords
 
 `python -c 'import crypt,getpass; print(crypt.crypt(getpass.getpass(), crypt.mksalt(crypt.METHOD_SHA512)))'` or `openssl passwd -6`
 
@@ -54,7 +54,7 @@ verify
 
 `SELECT * FROM mailserver.virtual_users;`
 
-### Step 5: Insert any email aliases
+### Step 5: Add any email aliases
 
 `INSERT INTO virtual_aliases (domain_id, source, destination) VALUES ('1', 'alias@example.com', 'user@example.com');`
 
