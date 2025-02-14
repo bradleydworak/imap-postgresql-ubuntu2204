@@ -37,7 +37,7 @@ These instructions were adopted from [Configure an Email Server with Postfix, Do
 
 `GRANT SELECT ON TABLE virtual_aliases TO mailuser;`
 
-### Step 3: Insert your domain(s) into virtual_domains table
+### Step 3: Add domain(s) to the virtual_domains table
 
 `INSERT INTO virtual_domains (name) VALUES ('example.com');`
 
